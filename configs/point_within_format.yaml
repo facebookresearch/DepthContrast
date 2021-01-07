@@ -1,0 +1,76 @@
+resume: false
+test_only: false
+num_workers: 10
+
+required_devices: 1
+no_test: false
+debug: false
+log2tb: true
+allow_double_bs: false
+seed: 0
+distributed: false
+test_freq: 10
+print_freq: 5
+
+dataset:
+  DATASET_NAMES: [scannet]
+  DATA_PATHS: ['/path/to/datalist.npy']
+  DATA_LIMIT: -1
+  BATCHSIZE_PER_REPLICA: 32
+  LABEL_TYPE: sample_index
+  DATA_TYPE: points
+  VOX: False
+  POINT_TRANSFORMS:
+    - name: randomcuboid
+      crop: 0.5
+      npoints: 10000
+      randcrop: 1.0
+      aspect: 0.75
+    - name: randomdrop
+      crop: 0.2
+    - name: multiscale
+    - name: RandomFlip
+    - name: RandomRotateAll
+    - name: RandomScale
+    - name: ToTensor
+  COLLATE_FUNCTION: "point_moco_collator"
+  INPUT_KEY_NAMES: ["points", "points_moco"]
+  DROP_LAST: True
+
+optimizer:
+  name: "sgd"
+  weight_decay: 0.0001
+  momentum: 0.9
+  nesterov: False
+  num_epochs: 1000
+  lr:
+    name: "cosine"
+    base_lr: 0.12
+    final_lr: 0.00012
+
+model:
+  name: "Pointnet1X"
+  model_dir: "checkpoints/pointnet1x_within_format"
+  model_input: ["points", "points_moco"]
+  model_feature: [["fp2"], ["fp2"]]
+  arch_point: "pointnet"
+  args_point:
+    scale: 1
+    use_mlp: True
+    mlp_dim: [512, 512, 128]
+loss:
+  name: "NCELossMoco"
+  args:
+    two_domain: True
+    LOSS_TYPE: NPID
+    OTHER_INPUT: False
+    within_format_weight0: 1.0
+    within_format_weight1: 0.0
+    across_format_weight0: 0.0
+    across_format_weight1: 0.0
+    NCE_LOSS:
+      NORM_EMBEDDING: True
+      TEMPERATURE: 0.1
+      LOSS_TYPE: cross_entropy
+      NUM_NEGATIVES: 131072
+      EMBEDDING_DIM: 128

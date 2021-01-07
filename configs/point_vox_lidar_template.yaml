@@ -1,0 +1,80 @@
+resume: false
+test_only: false
+num_workers: 10
+
+required_devices: 1
+no_test: false
+debug: false
+log2tb: true
+allow_double_bs: false
+seed: 0
+distributed: false
+test_freq: 10
+print_freq: 5
+
+dataset:
+  DATASET_NAMES: [waymo]
+  DATA_PATHS: ['/path/to/waymo.npy']
+  BATCHSIZE_PER_REPLICA: 32
+  LABEL_TYPE: sample_index
+  DATA_TYPE: point_vox
+  Lidar: True
+  VOX: True
+  POINT_TRANSFORMS:
+    - name: randomcuboidLidar
+      crop: 0.5
+      npoints: 10000
+      randcrop: 1.0
+      aspect: 0.75
+    - name: randomdrop
+      crop: 0.2
+    - name: RandomFlipLidar
+    - name: RandomRotateLidar
+    - name: RandomScaleLidar
+    - name: ToTensorLidar
+  COLLATE_FUNCTION: "point_vox_moco_collator"
+  INPUT_KEY_NAMES: ["points", "points_moco", "vox", "vox_moco"]
+  DROP_LAST: True
+
+optimizer:
+  name: "sgd"
+  weight_decay: 0.0001
+  momentum: 0.9
+  nesterov: False
+  num_epochs: 1000
+  lr:
+    name: "cosine"
+    base_lr: 0.12
+    final_lr: 0.00012
+
+model:
+  name: "PointnetMSG_UnetV2"
+  model_dir: "checkpoints/pointnetMSG_UnetV2_within_format"
+  model_input: ["points", "points_moco", "vox", "vox_moco"]
+  model_feature: [["fp2"], ["fp2"], ["conv4"], ["conv4"]]
+  Lidar: True
+  arch_point: "pointnet_msg"
+  args_point:
+    use_mlp: True
+    mlp_dim: [128, 128, 128]
+  arch_vox: "UNetV2"
+  args_vox:
+    use_mlp: True
+    mlp_dim: [128, 128, 128]
+
+loss:
+  name: "NCELossMoco"
+  args:
+    two_domain: True
+    LOSS_TYPE: NPID
+    OTHER_INPUT: True
+    within_format_weight0: 1.0
+    within_format_weight1: 1.0
+    across_format_weight0: 0.0
+    across_format_weight1: 0.0
+    NCE_LOSS:
+      NORM_EMBEDDING: True
+      TEMPERATURE: 0.1
+      LOSS_TYPE: cross_entropy
+      NUM_NEGATIVES: 65536
+      EMBEDDING_DIM: 128

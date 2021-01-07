@@ -1,0 +1,3 @@
+[submodule "third_party/OpenPCDet"]
+	path = third_party/OpenPCDet
+	url = https://github.com/zaiweizhang/OpenPCDet
