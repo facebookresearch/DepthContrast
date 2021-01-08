@@ -1,5 +1,5 @@
 # Self-Supervised Pretraining of 3D Features on any Point-Cloud
-This code provides a PyTorch implementation and pretrained models for **DepthContrast**, as described in the paper [Self-Supervised Pretraining of 3D Features on any Point-Cloud](paper link here).
+This code provides a PyTorch implementation and pretrained models for **DepthContrast**, as described in the paper [Self-Supervised Pretraining of 3D Features on any Point-Cloud](http://arxiv.org/abs/2101.02691).
 
 <div align="center">
   <img width="100%" alt="DepthContrast Pipeline" src="imgs/method.jpg">
@@ -91,4 +91,10 @@ See the [LICENSE](LICENSE) file for more details.
 If you find this repository useful in your research, please cite:
 
 ```
+@inproceedings{zhang_depth_contrast,
+  title={Self-Supervised Pretraining of 3D Features on any Point-Cloud},
+  author={Zhang, Zaiwei and Girdhar, Rohit and Joulin, Armand and Misra, Ishan},
+  journal={arXiv preprint arXiv:2101.02691},
+  year={2021}
+}
 ```
