@@ -37,7 +37,13 @@ We provide the joint training results here, with different epochs. We use epoch 
 
 ## Requirements
 You can use the requirements.txt to setup the environment.
-You can do:
+First download the git-repo and install the pointnet modules:
+```
+git clone --recursive https://github.com/facebookresearch/DepthContrast.git 
+cd pointnet2
+python setup.py install
+```
+Then install all other packages:
 ```
 pip install -r requirements.txt
 ```
@@ -48,20 +54,22 @@ conda install --file requirements.txt
 
 For voxel representation, you have to install MinkowskiEngine. Please see [here](https://github.com/chrischoy/SpatioTemporalSegmentation) on how to install it.
 
-For the lidar point cloud pretraining, we use models from [OpenPCDet](https://github.com/open-mmlab/OpenPCDet). To install OpenPCDet, you need to install [spconv](https://github.com/traveller59/spconv), which is a bit difficult to install and may not be compatible with MinkowskiEngine. Thus, we suggest you use a different conda environment for lidar point cloud pretraining.
+For the lidar point cloud pretraining, we use models from [OpenPCDet](https://github.com/open-mmlab/OpenPCDet). It should be in the third_party folder. To install OpenPCDet, you need to install [spconv](https://github.com/traveller59/spconv), which is a bit difficult to install and may not be compatible with MinkowskiEngine. Thus, we suggest you use a different conda environment for lidar point cloud pretraining. 
 
 ## Singlenode training
 DepthContrast is very simple to implement and experiment with.
 
-To experiment with it on one GPU, you can simply do:
+To experiment with it on one GPU and debugging, you can do:
 ```
 python main.py /path/to/cfg/file
 ```
 
+For the actual training, please use the distributed trainer. 
 For multi-gpu training in one node, you can run:
 ```
 python main.py /path/to/cfg_file --multiprocessing-distributed --world-size 1 --rank 0 --ngpus number_of_gpus
 ```
+To run it with just one gpu, just set the --ngpus to 1.
 For submitting it to a slurm node, you can use ./scripts/pretrain_node1.sh. For hyper-parameter tuning, please change the config files.
 
 ## Multinode training
