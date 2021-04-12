@@ -22,6 +22,11 @@ def pc2obj(pc, filepath='test.obj'):
 nump = 50000 ### Number of points from the depth scans
 scenelist = glob(sys.argv[1]+"*") ### Input path to the data
 
+if not os.path.exists(sys.argv[2]):
+    os.mkdir(sys.argv[2])
+if not os.path.exists(sys.argv[3]):
+    os.mkdir(sys.argv[3])
+
 datalist = []
 for scene in scenelist:
     framelist = glob(scene+"/*")
