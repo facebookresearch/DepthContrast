@@ -16,8 +16,15 @@ import torch
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
 import torch.optim
-import torch.multiprocessing as mp
 
+from torch.multiprocessing import Pool, Process, set_start_method
+try:
+     set_start_method('spawn')
+except RuntimeError:
+    pass
+
+import torch.multiprocessing as mp
+  
 import utils.logger
 from utils import main_utils
 
