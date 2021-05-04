@@ -24,8 +24,6 @@ def main():
   scans = glob(opt.scans_path+"/*")
   for scan in scans:
     scenename = scan.split("/")[-1]
-    if scenename != "scene0000_00":
-      continue
     filename = os.path.join(scan, scenename+".sens")
     if not os.path.exists(opt.output_path):
       os.makedirs(opt.output_path)
