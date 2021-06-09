@@ -186,7 +186,7 @@ pcre=8.42=h439df22_0
 pep8=1.7.1=py36_0
 pexpect=4.3.1=py36_0
 pickleshare=0.7.4=py36h63277f8_0
-pillow=8.1.1
+pillow=8.2.0
 pip=19.3.1=py36_0
 pixman=0.34.0=hceecf20_3
 pkginfo=1.4.1=py36h215d178_1
