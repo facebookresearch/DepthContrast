@@ -30,7 +30,8 @@ from torch.utils.data import Dataset
 import torch
 
 ### Waymo lidar range
-POINT_RANGE = np.array([  0. , -75. ,  -3. ,  75.0,  75. ,   3. ], dtype=np.float32)
+#POINT_RANGE = np.array([  0. , -75. ,  -3. ,  75.0,  75. ,   3. ], dtype=np.float32)
+POINT_RANGE = np.array([0, -40, -3, 70.4, 40, 1], dtype=np.float32)#np.array([  0. , -75. ,  -3. ,  75.0,  75. ,   3. ], dtype=np.float32) ### KITTI
 
 class DepthContrastDataset(Dataset):
     """Base Self Supervised Learning Dataset Class."""
@@ -54,7 +55,7 @@ class DepthContrastDataset(Dataset):
         if ("Lidar" in cfg) and cfg["VOX"]:
             self.VOXEL_SIZE = [0.1, 0.1, 0.2]
        
-            self.point_cloud_range = np.array([  0. , -75. ,  -3. ,  75.0,  75. ,   3. ], dtype=np.float32)
+            self.point_cloud_range = POINT_RANGE#np.array([  0. , -75. ,  -3. ,  75.0,  75. ,   3. ], dtype=np.float32)
             self.MAX_POINTS_PER_VOXEL = 5
             self.MAX_NUMBER_OF_VOXELS = 16000
             self.voxel_generator = VoxelGenerator(
@@ -161,7 +162,8 @@ class DepthContrastDataset(Dataset):
         point_path = self.data_objs[idx]
         try:
             if "Lidar" in self.cfg:
-                point = np.load(point_path)
+                #point = np.load(point_path)
+                point = np.fromfile(str(point_path), dtype=np.float32).reshape(-1, 4)#np.load(point_path)
                 if point.shape[1] != 4:
                     temp = np.zeros((point.shape[0],4))
                     temp[:,:3] = point

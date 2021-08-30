@@ -88,7 +88,7 @@ class NCELossMoco(nn.Module):
         assert self.K % batch_size == 0  # for simplicity
         
         # replace the keys at ptr (dequeue and enqueue)
-        self.queue[:, ptr:ptr + batch_size] = keys.T
+        self.queue[:, ptr:ptr + batch_size] = torch.transpose(keys, 0, 1)
         ptr = (ptr + batch_size) % self.K  # move pointer
         
         self.queue_ptr[0] = ptr
@@ -100,7 +100,7 @@ class NCELossMoco(nn.Module):
             other_ptr = int(self.queue_other_ptr)
         
             # replace the keys at ptr (dequeue and enqueue)
-            self.queue_other[:, other_ptr:other_ptr + batch_size] = okeys.T
+            self.queue_other[:, other_ptr:other_ptr + batch_size] = torch.transpose(okeys, 0, 1)#okeys.T
             other_ptr = (other_ptr + batch_size) % self.K  # move pointer
         
             self.queue_other_ptr[0] = other_ptr
